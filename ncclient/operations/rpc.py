@@ -35,7 +35,13 @@ class RPCError(OperationError):
         qualify("error-severity"): "_severity",
         qualify("error-info"): "_info",
         qualify("error-path"): "_path",
-        qualify("error-message"): "_message"
+        qualify("error-message"): "_message",
+        "error-type": "_type",
+        "error-tag": "_tag",
+        "error-severity": "_severity",
+        "error-info": "_info",
+        "error-path": "_path",
+        "error-message": "_message"
     }
 
     def __init__(self, raw):
@@ -116,10 +122,10 @@ class RPCReply(object):
         if self._parsed: return
         root = self._root = to_ele(self._raw) # The <rpc-reply> element
         # Per RFC 4741 an <ok/> tag is sent when there are no errors or warnings
-        ok = root.find(qualify("ok"))
+        ok = root.find(qualify("ok")) or root.find('ok)
         if ok is None:
             # Create RPCError objects from <rpc-error> elements
-            error = root.find('.//'+qualify('rpc-error'))
+            error = root.find('.//'+qualify('rpc-error')) or root.find('.//' + 'rpc-error')
             if error is not None:
                 for err in root.getiterator(error.tag):
                     # Process a particular <rpc-error>
@@ -181,7 +187,7 @@ class RPCReplyListener(SessionListener): # internal use
     def callback(self, root, raw):
         tag, attrs = root
         if self._device_handler.perform_qualify_check():
-            if tag != qualify("rpc-reply"):
+            if tag != qualify("rpc-reply") and tag != 'rpc-reply':
                 return
         for key in attrs: # in the <rpc-reply> attributes
             if key == "message-id": # if we found msgid attr

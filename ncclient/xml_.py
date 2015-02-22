@@ -183,3 +183,7 @@ class NCElement(object):
 new_ele = lambda tag, attrs={}, **extra: etree.Element(qualify(tag), attrs, **extra)
 
 sub_ele = lambda parent, tag, attrs={}, **extra: etree.SubElement(parent, qualify(tag), attrs, **extra)
+
+new_ele_no_nc = lambda tag, attrs={}, **extra: etree.Element(tag, attrs, **extra)
+
+sub_ele_no_nc = lambda parent, tag, attrs={}, **extra: etree.SubElement(parent, tag, attrs, **extra)
