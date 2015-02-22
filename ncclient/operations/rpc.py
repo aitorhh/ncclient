@@ -122,7 +122,7 @@ class RPCReply(object):
         if self._parsed: return
         root = self._root = to_ele(self._raw) # The <rpc-reply> element
         # Per RFC 4741 an <ok/> tag is sent when there are no errors or warnings
-        ok = root.find(qualify("ok")) or root.find('ok)
+        ok = root.find(qualify("ok")) or root.find('ok')
         if ok is None:
             # Create RPCError objects from <rpc-error> elements
             error = root.find('.//'+qualify('rpc-error')) or root.find('.//' + 'rpc-error')
